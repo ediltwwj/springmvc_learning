@@ -116,14 +116,12 @@ public class HelloController {
 }
 ```
 #### 入门案例的执行流程 
-  1、当启动Tomcat服务器时，因配置了load-on-startup标签，所以会创建DispatcherServlet对象
-    就会加载springmvc.xml配置文件   
-  2、开启了注解扫描，那么HelloController对象就会被创建  
-  3、从index.jsp发送请求，请求会先到达DispatcherServlet核心控制器，根据配置@RequestMapping
-  注解找到具体的执行方法       
-  4、根据方法的返回值，再根据配置的视图解析器，去指定的目录下查找指定名称的文件的JSP文件    
+  1、当启动Tomcat服务器时，因配置了load-on-startup标签，所以会创建DispatcherServlet对象就会加载springmvc.xml配置文件   
+  2、开启了注解扫描，那么HelloController对象就会被创建   
+  3、从index.jsp发送请求，请求会先到达DispatcherServlet核心控制器，根据配置@RequestMapping注解找到具体的执行方法          
+  4、根据方法的返回值，再根据配置的视图解析器，去指定的目录下查找指定名称的文件的JSP文件     
   5、Tomcat服务器渲染页面，做出响应     
-#### 入门案例中的组件分析  
+#### 入门案例中的组件分析   
   + 前端控制器(DispatcherServlet)  
   + 处理器映射器(HandlerMapping)  
   + 处理器(Handler)  
@@ -132,7 +130,7 @@ public class HelloController {
   + 视图(View)  
   ![avatar](/springmvc01.jpg)     
 #### RequestMapping注解    
-  1、RequestMapping注解的作用是建立请求URL和处理方法之间的对应关系  
+  1、RequestMapping注解的作用是建立请求URL和处理方法之间的对应关系   
   2、RequestMapping注解可以作用在方法和类上  
     + 作用在类上: 第一级的访问目录  
     + 作用在方法上: 第二级的访问目录  
@@ -140,7 +138,7 @@ public class HelloController {
     + ${ pageContext.request.contextPath }也可以省略不写，但是路径上不能写 /  
   3、RequestMapping的属性   
     + path: 指定请求路径的url   
-    + value: value属性和path属性是一样的  
+    + value: value属性和path属性是一样的   
     + method: 指定该方法的请求方式(method = RequestMethod.POST)   
     + params: 指定限制请求参数的条件(params = {"username","password=123"})   
     + headers: 发生的请求中必须包含的请求头(headers = {"Cookie"})    
