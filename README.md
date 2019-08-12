@@ -128,7 +128,8 @@ public class HelloController {
   + 处理器适配器(HandlAdapter)   
   + 视图解析器(View Resolver)  
   + 视图(View)  
-  ![avatar](/springmvc01.jpg)     
+  ![avatar](/springmvc01.jpg)   
+    
 #### RequestMapping注解    
   1、RequestMapping注解的作用是建立请求URL和处理方法之间的对应关系   
   2、RequestMapping注解可以作用在方法和类上  
