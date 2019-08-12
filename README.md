@@ -124,12 +124,12 @@ public class HelloController {
   4、根据方法的返回值，再根据配置的视图解析器，去指定的目录下查找指定名称的文件的JSP文件    
   5、Tomcat服务器渲染页面，做出响应     
 #### 入门案例中的组件分析  
-  1、前端控制器(DispatcherServlet)  
-  2、处理器映射器(HandlerMapping)  
-  3、处理器(Handler)  
-  4、处理器适配器(HandlAdapter)   
-  5、视图解析器(View Resolver)  
-  6、视图(View)  
+  + 前端控制器(DispatcherServlet)  
+  + 处理器映射器(HandlerMapping)  
+  + 处理器(Handler)  
+  + 处理器适配器(HandlAdapter)   
+  + 视图解析器(View Resolver)  
+  + 视图(View)  
   ![avatar](/springmvc01.jpg)     
 #### RequestMapping注解    
   1、RequestMapping注解的作用是建立请求URL和处理方法之间的对应关系  
