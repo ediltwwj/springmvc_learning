@@ -128,16 +128,15 @@ public class HelloController {
   + 处理器适配器(HandlAdapter)   
   + 视图解析器(View Resolver)  
   + 视图(View)  
-  
-  
+  ![avatar](/springmvc01.jpg)   
 #### RequestMapping注解    
-  1、RequestMapping注解的作用是建立请求URL和处理方法之间的对应关系   
-  2、RequestMapping注解可以作用在方法和类上  
-    - 作用在类上: 第一级的访问目录  
-    - 作用在方法上: 第二级的访问目录  
-    - 细节: 路径可以不写/表示应用的根目录开始   
+  + RequestMapping注解的作用是建立请求URL和处理方法之间的对应关系   
+  + RequestMapping注解可以作用在方法和类上   
+    - 作用在类上: 第一级的访问目录   
+    - 作用在方法上: 第二级的访问目录   
+    - 细节: 路径可以不写/表示应用的根目录开始    
     - ${ pageContext.request.contextPath }也可以省略不写，但是路径上不能写/   
-  3、RequestMapping的属性   
+  + RequestMapping的属性   
     - path: 指定请求路径的url   
     - value: value属性和path属性是一样的   
     - method: 指定该方法的请求方式(method = RequestMethod.POST)   
