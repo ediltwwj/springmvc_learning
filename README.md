@@ -115,7 +115,7 @@ public class HelloController {
     }
 }
 ```
-#### 入门案例的执行流程 
+#### 入门案例的执行流程  
   1、当启动Tomcat服务器时，因配置了load-on-startup标签，所以会创建DispatcherServlet对象就会加载springmvc.xml配置文件   
   2、开启了注解扫描，那么HelloController对象就会被创建   
   3、从index.jsp发送请求，请求会先到达DispatcherServlet核心控制器，根据配置@RequestMapping注解找到具体的执行方法          
@@ -128,7 +128,7 @@ public class HelloController {
   + 处理器适配器(HandlAdapter)   
   + 视图解析器(View Resolver)  
   + 视图(View)  
-  ![avatar](/springmvc01.jpg)   
+  
   
 #### RequestMapping注解    
   1、RequestMapping注解的作用是建立请求URL和处理方法之间的对应关系   
