@@ -13,7 +13,7 @@
 <body>
     <h3>入门程序</h3>
 
-    <a href="/springmvc/requestMapping">测试RequestMapping...</a>
+    <a href="springmvc/requestMapping">测试RequestMapping...</a>
 
 </body>
 </html>

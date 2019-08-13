@@ -19,8 +19,18 @@
         <property name="prefix" value="/WEB-INF/pages/"/>  <!-- 要跳转的目录 -->
         <property name="suffix" value=".jsp"/>  <!-- 文件后缀 -->
     </bean>
+    
+    <!-- 配置自定义类型转换器 -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.springmvc.utils.StringToDateConverter"/>
+            </set>
+        </property>
+    </bean>
 
     <!-- 开启SpringMvc框架注解的支持 -->
     <!-- 自动加载处理映射器和处理适配器 -->
-    <mvc:annotation-driven/>
+    <!-- 开启类型转换服务支持 -->
+    <mvc:annotation-driven conversion-service="conversionService"/>
 </beans>
