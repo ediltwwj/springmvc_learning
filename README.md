@@ -144,7 +144,181 @@ public class HelloController {
     - headers: 发生的请求中必须包含的请求头(headers = {"Cookie"})     
      
 ### 请求参数的绑定  
+#### 基本数据类型和字符串类型   
+**提交表单的name值和方法参数的名称是相同的(区分大小写)**        
+```java
+    @RequestMapping("/param1")
+    public String testParam1(String username, String password){
 
+        System.out.println("UserName: " + username + ", Password: " + password);
+        return "success";
+    }
+```
+```html
+    <h3>请求参数绑定基本类型</h3>
+    <form action="param1">
+        username:<input name="username" type="text"/><br/>
+        password:<input name="password" type="password"/><br/>
+        <input type="submit" value="提交"/>
+    </form>
+```
+#### 单个实体类型   
+**提交表单的name和JavaBean中的属性名称需要一致**     
+```java
+public class Account implements Serializable {
 
-  
-  
+    private String username;
+    private String password;
+    private Double money;
+    
+    // 省略getter，setter，toString方法
+}
+```
+```java
+    @RequestMapping("/param2")
+    public String testParam2(Account account){
+
+        System.out.println(account);
+        return "success";
+    }
+```
+```html
+    <h3>请求参数绑定单个实体类型</h3>
+    <form action="param2" method="post">
+        UserName:<input type="text" name="username" /><br/>
+        Password:<input type="text" name="password" /><br/>
+        Money:<input type="text" name="money" /><br/>
+        <input type="submit" value="提交"/>
+    </form>
+```  
+#### 单个实体类包含其他引用类型  
+**表单属性需要编写成对象.属性，例如account.money**    
+```java
+public class Employee implements Serializable {
+
+    private String employeeName;
+    private Account account;
+    
+    // 省略getter,setter,toString方法
+}
+``` 
+```java
+    @RequestMapping("/param3")
+    public String testParam3(Employee employee){
+
+        System.out.println(employee);
+        return "success";
+    }
+```
+```html
+    <h3>请求参数绑定实体类型中含有实体类型</h3>
+    <form action="param3" method="post">
+        UserName:<input type="text" name="account.username" /><br/>
+        Password:<input type="text" name="account.password" /><br/>
+        Money:<input type="text" name="account.money" /><br/>
+        EmployeeName:<input type="text" name="employeeName"><br/>
+        <input type="submit" value="提交"/>
+    </form>
+```  
+#### 集合类型  
+**主要是list和map，jsp编写方式为list[0]或者map[0].name**    
+```java
+public class Bank implements Serializable {
+
+    private String bankName;
+    private List<Account> list;
+    private Map<Integer, Account> map;
+    
+    // 省略getter,setter,toString方法
+}
+``` 
+```java
+    @RequestMapping("/param4")
+    public String testParam4(Bank bank){
+
+        System.out.println(bank);
+        return "success";
+    }
+```
+```html
+    <h3>请求参数绑定集合类型</h3>
+    <form action="param4" method="post">
+        BankName:<input type="text" name="bankName"/><br/><hr/>
+        <!-- list -->
+        UserName1L:<input type="text" name="list[0].username"/><br/>
+        Password1L:<input type="text" name="list[0].password"/><br/>
+        Money1L:<input type="text" name="list[0].money"/><br/>
+        <hr/>
+        UserName2L:<input type="text" name="list[1].username"/><br/>
+        Password2L:<input type="text" name="list[1].password"/><br/>
+        Money2L:<input type="text" name="list[1].money"/><br/>
+        <hr/>
+        <!-- Map -->
+        UserName1M:<input type="text" name="map[0].username"/><br/>
+        Password1M:<input type="text" name="map[0].password"/><br/>
+        Money1M:<input type="text" name="map[0].money"/><br/>
+        <hr/>
+        UserName2M:<input type="text" name="map['1'].username"/><br/>
+        Password2M:<input type="text" name="map['1'].password"/><br/>
+        Money2M:<input type="text" name="map['1'].money"/><br/>
+        <input type="submit" value="提交"/>
+    </form>
+```
+#### 自定义类型转换器  
+  + **实现Converter接口**    
+  ```java
+    import org.springframework.core.convert.converter.Converter;
+
+    // 字符串转换为日期
+    public class StringToDateConverter implements Converter<String, Date> {
+    
+        /**
+         * @param source 传入的字符串
+         * @return
+         */
+        @Override
+        public Date convert(String source) {
+            if(source == null){
+                throw new RuntimeException("请您传入数据");
+            }
+            // 会导致原来yyyy/MM/dd的格式无法使用
+            try{
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                return df.parse(source);
+            }catch (Exception e){
+                throw new RuntimeException("数据类型转换出现错误");
+            }
+        }
+    }
+  ```
+  + **注册自定义类型转换器，在springmvc.xml配置文件中编写配置**    
+  ```xml
+    <!-- 配置自定义类型转换器 -->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.springmvc.utils.StringToDateConverter"/>
+            </set>
+        </property>
+    </bean>
+    
+    <!-- 开启类型转换服务支持 -->
+    <mvc:annotation-driven conversion-service="conversionService"/>    
+  ```
+#### 请求参数中文乱码的解决  
+**在web.xml中配置Spring提供的过滤器**
+```xml
+  <!-- 配置解决中文乱码的过滤器 -->
+  <filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+```  
