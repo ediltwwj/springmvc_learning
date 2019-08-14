@@ -411,15 +411,15 @@ public class Bank implements Serializable {
   - 应用场景:
     - 当提交表单数据不是完整的实体数据时，保证没有提交的字段使用数据库原来的数据  
   + 代码  
-  **修饰的方法有返回值**    
-  ```html
-    <form action="modelAttribute1" method="post">
-        姓名:<input type="text" name="username"/><br/>
-        年龄:<input type="text" name="password"/><br/>
-        <input type="submit" value="提交"/>
-    </form>
-  ```
-  ```java
+    - **修饰的方法有返回值**    
+      ```html
+        <form action="modelAttribute1" method="post">
+            姓名:<input type="text" name="username"/><br/>
+            年龄:<input type="text" name="password"/><br/>
+            <input type="submit" value="提交"/>
+        </form>
+      ```
+    ```java
     @RequestMapping("/modelAttribute1")
     public String testModelAttribute(Account account){
 
@@ -427,9 +427,7 @@ public class Bank implements Serializable {
         System.out.println(account);
         return "success";
     }
-    
-
-   
+       
     @ModelAttribute
     public Account showAccount(String username, String password){
         System.out.println("有返回值...");
@@ -441,16 +439,16 @@ public class Bank implements Serializable {
 
         return account;
     }
-  ```
-  **修饰的方法没有返回值**  
-  ```html
+    ```
+    - **修饰的方法没有返回值**  
+    ```html
     <form action="modelAttribute2" method="post">
         姓名:<input type="text" name="username"/><br/>
         年龄:<input type="text" name="password"/><br/>
         <input type="submit" value="提交"/>
     </form>
-  ```  
-  ```java
+    ```  
+    ```java
     @RequestMapping("/modelAttribute2")
     public String testModelAttribute(@ModelAttribute("1") Account account){
 
@@ -469,7 +467,7 @@ public class Bank implements Serializable {
         account.setMoney(200.0);
         map.put("1", account);
     }
-  ```
+    ```
 #### SessionAttributes注解  
   + 作用: 用于多次执行控制器方法间的参数共享  
   + 属性:  
