@@ -322,3 +322,173 @@ public class Bank implements Serializable {
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 ```  
+### 常用的注解  
+#### RequestParam注解  
+  + 作用: 把请求参数中的指定名称参数传递给控制器中的形参赋值  
+  + 属性:  
+    - value: 请求参数中的名称  
+    - required: 请求参数中是否必须提供此参数，默认值是true，必须提供  
+```html
+    <a href="requestParam?name=Mike">RequestParam</a>
+```  
+```java
+    @RequestMapping("/requestParam")
+    public String testRequestParam(@RequestParam(value = "name", required = false) String username){
+
+        System.out.println("Name:" + username);
+        return "success";
+    }
+```    
+#### RequestBody注解  
+  + 作用: 用于获取请求体的内容  
+  + 属性:
+    - required: 是否必须有请求体，默认是true，get请求不可以用，写false，则get的body为null  
+```html
+    <form action="requestBody" method="post">
+        姓名:<input type="text" name="username"/><br/>
+        年龄:<input type="text" name="age"/><br/>
+        <input type="submit" value="提交"/>
+    </form>
+```
+```java
+    @RequestMapping("/requestBody")
+    public String testRequestBody(@RequestBody String body){
+
+        System.out.println("Body: " + body);
+        return "success";
+    }
+```
+#### PathVariable注解  
+  + 作用: 绑定url中的占位符，例如url中有/deleted/{id}，{id}就是占位符  
+  + 属性: 
+    - value: 指定url中占位符名称，等同于name属性  
+```html
+<a href="/pathVariable/10">PathVariable</a>
+```
+```java
+    @RequestMapping("/pathVariable/{sid}")
+    public String testPathVariable(@PathVariable(value = "sid") String id){
+
+        System.out.println("ID: " + id);
+        return "success";
+    }
+```
+#### RequestHeader注解
+  + 作用: 获取指定请求头的值  
+  + 属性:
+    - value: 请求头的名称  
+```html
+<a href="requestHeader">RequestHeader</a>
+```
+```java
+    @RequestMapping("/requestHeader")
+    public String testRequestHeader(@PRequestHeader(value = "Accept") String header){
+
+        System.out.println("Header: " + header);
+        return "success";
+    }
+```
+#### CookieValue注解  
+  + 作用: 用于把指定cookie名称的值传入控制器方法参数  
+  + 属性:
+    - value: 指定cookie的名称  
+    - required: 是否必须有次cookie  
+```html
+<a href="cookieValue">CookieValue</a>
+```
+```java
+    @RequestMapping("/cookieValue")
+    public String testCookievalue(@CookieValue(value = "JSESSIONID") String cookieValue){
+
+        System.out.println("CookieValue: " + cookieValue);
+        return "success";
+    }
+```
+#### ModelAttribute注解  
+  + 作用:
+    - 出现在方法上: 表示当前方法会在控制器方法执行之前执行  
+    - 出现在参数上: 获取指定的数据给参数赋值  
+  - 应用场景:
+    - 当提交表单数据不是完整的实体数据时，保证没有提交的字段使用数据库原来的数据  
+  + 代码  
+  **修饰的方法有返回值**    
+  ```html
+    <form action="modelAttribute1" method="post">
+        姓名:<input type="text" name="username"/><br/>
+        年龄:<input type="text" name="password"/><br/>
+        <input type="submit" value="提交"/>
+    </form>
+  ```
+  ```java
+    @RequestMapping("/modelAttribute1")
+    public String testModelAttribute(Account account){
+
+        System.out.println("ModelAttribute控制器方法执行...");
+        System.out.println(account);
+        return "success";
+    }
+    
+
+   
+    @ModelAttribute
+    public Account showAccount(String username, String password){
+        System.out.println("有返回值...");
+        // 模拟查询数据库，设置money，返回Account对象给控制器
+        Account account = new Account();
+        account.setUsername(username);
+        account.setPassword(password);
+        account.setMoney(200.0);
+
+        return account;
+    }
+  ```
+  **修饰的方法没有返回值**  
+  ```html
+    <form action="modelAttribute2" method="post">
+        姓名:<input type="text" name="username"/><br/>
+        年龄:<input type="text" name="password"/><br/>
+        <input type="submit" value="提交"/>
+    </form>
+  ```  
+  ```java
+    @RequestMapping("/modelAttribute2")
+    public String testModelAttribute(@ModelAttribute("1") Account account){
+
+        System.out.println("ModelAttribute控制器方法执行...");
+        System.out.println(account);
+        return "success";
+    }
+
+    @ModelAttribute
+    public void showAccount(String username, String password, Map<String, Account> map){
+        System.out.println("无返回值...");
+        // 模拟查询数据库，设置money,将Account放进Map
+        Account account = new Account();
+        account.setUsername(username);
+        account.setPassword(password);
+        account.setMoney(200.0);
+        map.put("1", account);
+    }
+  ```
+#### SessionAttributes注解  
+  + 作用: 用于多次执行控制器方法间的参数共享  
+  + 属性:  
+    - value: 指定存入属性的名称  
+```html
+<a href="sessionAttributes">SessionAttributes</a>
+```     
+```java
+@Controller
+@SessionAttributes(value = {"msg"})  // 把msg=该存啥呢存入到session域对中
+public class AnnoController {
+    
+    @RequestMapping("/sessionAttributes")
+    public String testSessionAttributes(Model model){
+        System.out.println("SessionAttributes...");
+        // 底层会存到request域对象中
+        model.addAttribute("msg","存啥好呢？");
+        return "success";
+    }    
+}
+```
+    
