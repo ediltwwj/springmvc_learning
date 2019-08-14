@@ -412,13 +412,13 @@ public class Bank implements Serializable {
     - 当提交表单数据不是完整的实体数据时，保证没有提交的字段使用数据库原来的数据  
   + 代码  
     - **修饰的方法有返回值**    
-      ```html
+    ```html
         <form action="modelAttribute1" method="post">
             姓名:<input type="text" name="username"/><br/>
             年龄:<input type="text" name="password"/><br/>
             <input type="submit" value="提交"/>
         </form>
-      ```
+    ```
     ```java
     @RequestMapping("/modelAttribute1")
     public String testModelAttribute(Account account){
