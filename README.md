@@ -489,4 +489,69 @@ public class AnnoController {
     }    
 }
 ```
-    
+### 2、响应数据和结果视图
+#### 返回值分类
+##### 返回值是字符串
+Controller方法返回字符串可以指定逻辑视图的名称，根据视图解析器为物理视图的地址  
+```java
+    @RequestMapping("/string")
+    public String testString(Model model){
+
+        System.out.println("执行了testString控制器方法...");
+        // 模拟从数据库中查询出User对象
+        User user = new User();
+        user.setUsername("Coder");
+        user.setPassword("123456");
+        user.setAge(22);
+        // model对象
+        model.addAttribute("user1", user);
+        return "success";
+    }
+``` 
+##### 返回值是Void
++ **如果控制器的方法返回值写成void，执行程序报404异常，默认查找JSP没有找到(void.jsp)**   
++ **可以使用请求转发或者是重定向跳转到指定的页面**  
++ **直接响应数据**   
+```java
+    @RequestMapping("/void")
+    public void testVoid(HttpServletRequest request, HttpServletResponse response) throws Exception{
+
+        System.out.println("执行了testVoid控制器方法...");
+        // 不写返回值，默认跳转到void.jsp
+
+        // 编写请求转发程序,转发是一次请求，不用写项目名称,且转发不会执行视图解析器
+        request.getRequestDispatcher("/WEB-INF/pages/success1.jsp").forward(request, response);
+
+        // 重定向，执行新的请求，需要完整路径，尝试好几个都到不了success1.jsp，见鬼了
+        response.sendRedirect(request.getContextPath() + "/index.jsp");
+
+        // 设置中文乱码
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+
+        // 直接进行响应
+        response.getWriter().print("也不知道要返回什么内容...");
+        return;
+    }
+```
+##### 返回值是ModelAndView对象  
+ModelAndView对象是Spring提供的一个对象，可以用来调整具体的JSP视图  
+```java
+    @RequestMapping("/modelandview")
+    public ModelAndView testModelAndView(){
+
+        System.out.println("执行了testModelAndView控制器方法...");
+        ModelAndView mv = new ModelAndView();
+
+        User user = new User();
+        user.setUsername("Coder");
+        user.setPassword("123456");
+        user.setAge(22);
+
+        // 把user对象存储到mv中，也会把user对象存到request对象中
+        mv.addObject("user2", user);
+        // 跳转到哪个页面
+        mv.setViewName("success1");
+        return mv;
+    }
+```
