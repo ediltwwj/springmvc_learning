@@ -1,8 +1,8 @@
-## SpringMvc的学习笔记 
-### 目录  
+# SpringMvc的学习笔记 
+## 目录  
 [toc]后续生成目录  
-### 1、SpringMvc的入门  
-#### 创建WEB工程，导入坐标
+## 1、SpringMvc的入门  
+### 创建WEB工程，导入坐标
 ```xml
 <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,7 +46,7 @@
     </dependency>
   </dependencies>
 ```
-#### 配置核心的控制器(配置DispatcherServlet)
+### 配置核心的控制器(配置DispatcherServlet)
   + 在web.xml配置文件中核心控制器DispatcherServlet  
   ```xml
     <servlet>
@@ -65,7 +65,7 @@
       <url-pattern>/</url-pattern>
     </servlet-mapping>
   ```
-#### 编写springmvc.xml的配置文件  
+### 编写springmvc.xml的配置文件  
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -94,7 +94,7 @@
     <mvc:annotation-driven/>
 </beans>
 ```
-#### 编写控制器类
+### 编写控制器类
 ```java
 // HelloController.java
 @Controller
@@ -115,13 +115,13 @@ public class HelloController {
     }
 }
 ```
-#### 入门案例的执行流程  
+### 入门案例的执行流程  
   1、当启动Tomcat服务器时，因配置了load-on-startup标签，所以会创建DispatcherServlet对象就会加载springmvc.xml配置文件   
   2、开启了注解扫描，那么HelloController对象就会被创建   
   3、从index.jsp发送请求，请求会先到达DispatcherServlet核心控制器，根据配置@RequestMapping注解找到具体的执行方法          
   4、根据方法的返回值，再根据配置的视图解析器，去指定的目录下查找指定名称的文件的JSP文件     
   5、Tomcat服务器渲染页面，做出响应     
-#### 入门案例中的组件分析   
+### 入门案例中的组件分析   
   + 前端控制器(DispatcherServlet)  
   + 处理器映射器(HandlerMapping)  
   + 处理器(Handler)  
@@ -129,7 +129,7 @@ public class HelloController {
   + 视图解析器(View Resolver)  
   + 视图(View)  
   ![avatar](/springmvc01.jpg)   
-#### RequestMapping注解    
+### RequestMapping注解    
   + RequestMapping注解的作用是建立请求URL和处理方法之间的对应关系   
   + RequestMapping注解可以作用在方法和类上   
     - 作用在类上: 第一级的访问目录   
@@ -143,8 +143,8 @@ public class HelloController {
     - params: 指定限制请求参数的条件(params = {"username","password=123"})   
     - headers: 发生的请求中必须包含的请求头(headers = {"Cookie"})     
      
-### 请求参数的绑定  
-#### 基本数据类型和字符串类型   
+## 请求参数的绑定  
+### 基本数据类型和字符串类型   
 **提交表单的name值和方法参数的名称是相同的(区分大小写)**        
 ```java
     @RequestMapping("/param1")
@@ -162,7 +162,7 @@ public class HelloController {
         <input type="submit" value="提交"/>
     </form>
 ```
-#### 单个实体类型   
+### 单个实体类型   
 **提交表单的name和JavaBean中的属性名称需要一致**     
 ```java
 public class Account implements Serializable {
@@ -191,7 +191,7 @@ public class Account implements Serializable {
         <input type="submit" value="提交"/>
     </form>
 ```  
-#### 单个实体类包含其他引用类型  
+### 单个实体类包含其他引用类型  
 **表单属性需要编写成对象.属性，例如account.money**    
 ```java
 public class Employee implements Serializable {
@@ -220,7 +220,7 @@ public class Employee implements Serializable {
         <input type="submit" value="提交"/>
     </form>
 ```  
-#### 集合类型  
+### 集合类型  
 **主要是list和map，jsp编写方式为list[0]或者map[0].name**    
 ```java
 public class Bank implements Serializable {
@@ -264,7 +264,7 @@ public class Bank implements Serializable {
         <input type="submit" value="提交"/>
     </form>
 ```
-#### 自定义类型转换器  
+### 自定义类型转换器  
   + **实现Converter接口**    
   ```java
     import org.springframework.core.convert.converter.Converter;
@@ -305,7 +305,7 @@ public class Bank implements Serializable {
     <!-- 开启类型转换服务支持 -->
     <mvc:annotation-driven conversion-service="conversionService"/>    
   ```
-#### 请求参数中文乱码的解决  
+### 请求参数中文乱码的解决  
 **在web.xml中配置Spring提供的过滤器**
 ```xml
   <!-- 配置解决中文乱码的过滤器 -->
@@ -322,8 +322,8 @@ public class Bank implements Serializable {
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 ```  
-### 常用的注解  
-#### RequestParam注解  
+## 常用的注解  
+### RequestParam注解  
   + 作用: 把请求参数中的指定名称参数传递给控制器中的形参赋值  
   + 属性:  
     - value: 请求参数中的名称  
@@ -339,7 +339,7 @@ public class Bank implements Serializable {
         return "success";
     }
 ```    
-#### RequestBody注解  
+### RequestBody注解  
   + 作用: 用于获取请求体的内容  
   + 属性:
     - required: 是否必须有请求体，默认是true，get请求不可以用，写false，则get的body为null  
@@ -358,7 +358,7 @@ public class Bank implements Serializable {
         return "success";
     }
 ```
-#### PathVariable注解  
+### PathVariable注解  
   + 作用: 绑定url中的占位符，例如url中有/deleted/{id}，{id}就是占位符  
   + 属性: 
     - value: 指定url中占位符名称，等同于name属性  
@@ -373,7 +373,7 @@ public class Bank implements Serializable {
         return "success";
     }
 ```
-#### RequestHeader注解
+### RequestHeader注解
   + 作用: 获取指定请求头的值  
   + 属性:
     - value: 请求头的名称  
@@ -388,7 +388,7 @@ public class Bank implements Serializable {
         return "success";
     }
 ```
-#### CookieValue注解  
+### CookieValue注解  
   + 作用: 用于把指定cookie名称的值传入控制器方法参数  
   + 属性:
     - value: 指定cookie的名称  
@@ -404,7 +404,7 @@ public class Bank implements Serializable {
         return "success";
     }
 ```
-#### ModelAttribute注解  
+### ModelAttribute注解  
   + 作用:
     - 出现在方法上: 表示当前方法会在控制器方法执行之前执行  
     - 出现在参数上: 获取指定的数据给参数赋值  
@@ -468,7 +468,7 @@ public class Bank implements Serializable {
         map.put("1", account);
     }
     ```
-#### SessionAttributes注解  
+### SessionAttributes注解  
   + 作用: 用于多次执行控制器方法间的参数共享  
   + 属性:  
     - value: 指定存入属性的名称  
@@ -489,9 +489,9 @@ public class AnnoController {
     }    
 }
 ```
-### 2、响应数据和结果视图
-#### 返回值分类
-##### 返回值是字符串
+## 2、响应数据和结果视图
+### 返回值分类
+#### 返回值是字符串
 Controller方法返回字符串可以指定逻辑视图的名称，根据视图解析器为物理视图的地址  
 ```java
     @RequestMapping("/string")
@@ -508,7 +508,7 @@ Controller方法返回字符串可以指定逻辑视图的名称，根据视图�
         return "success";
     }
 ``` 
-##### 返回值是Void
+#### 返回值是Void
 + **如果控制器的方法返回值写成void，执行程序报404异常，默认查找JSP没有找到(void.jsp)**   
 + **可以使用请求转发或者是重定向跳转到指定的页面**  
 + **直接响应数据**   
@@ -534,7 +534,7 @@ Controller方法返回字符串可以指定逻辑视图的名称，根据视图�
         return;
     }
 ```
-##### 返回值是ModelAndView对象  
+#### 返回值是ModelAndView对象  
 ModelAndView对象是Spring提供的一个对象，可以用来调整具体的JSP视图  
 ```java
     @RequestMapping("/modelandview")
