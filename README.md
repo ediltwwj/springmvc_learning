@@ -490,8 +490,8 @@ public class AnnoController {
 }
 ```
 ## 2、响应数据和结果视图
-### 返回值分类
-#### 返回值是字符串
+## 返回值分类
+### 返回值是字符串
 Controller方法返回字符串可以指定逻辑视图的名称，根据视图解析器为物理视图的地址  
 ```java
     @RequestMapping("/string")
@@ -508,7 +508,7 @@ Controller方法返回字符串可以指定逻辑视图的名称，根据视图�
         return "success";
     }
 ``` 
-#### 返回值是Void
+### 返回值是Void
 + **如果控制器的方法返回值写成void，执行程序报404异常，默认查找JSP没有找到(void.jsp)**   
 + **可以使用请求转发或者是重定向跳转到指定的页面**  
 + **直接响应数据**   
@@ -534,7 +534,7 @@ Controller方法返回字符串可以指定逻辑视图的名称，根据视图�
         return;
     }
 ```
-#### 返回值是ModelAndView对象  
+### 返回值是ModelAndView对象  
 ModelAndView对象是Spring提供的一个对象，可以用来调整具体的JSP视图  
 ```java
     @RequestMapping("/modelandview")
@@ -553,5 +553,72 @@ ModelAndView对象是Spring提供的一个对象，可以用来调整具体的JS
         // 跳转到哪个页面
         mv.setViewName("success1");
         return mv;
+    }
+```
+### 请求转发和重定向  
+```java
+    @RequestMapping("/forwardOrRedirect")
+    public String testForwardOrRedirect(){
+
+        System.out.println("执行了testForwardOrRedirect控制器方法...");
+
+        // 请求的转发
+        // return "forward:/WEB-INF/pages/success1.jsp";
+
+        // 重定向
+        return "redirect:/index.jsp";
+    }
+```
+## 响应JSON数据  
+### 过滤静态资源
+DispatcherServlet会拦截到所有的静态资源，导致一个问题就是静态资源(css,js,image)也会被拦截到，
+从而不能被使用。解决问题就是需要配置静态资源不进行拦截，在springmvc.xml中添加配置如下:    
+```java
+    <!-- 前端控制器，哪些静态资源不拦截 -->
+    <mvc:resources mapping="/js/**" location="/js/"/>
+```
+location: 表示webapp目录下的包(js)的所有文件   
+mapping: 表示/js开头的所有请求路径  
+### 发送ajax请求并响应json数据
+**发送ajax请求**  
+```js
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script>
+        // 页面加载，绑定单击事件
+        $(function () {
+            $("#btn").click(function () {
+                // 发送ajax请求
+                $.ajax({
+                    // 编写json格式，设置属性和值
+                    url: "return/json",
+                    contentType: "application/json;charset=UTF-8",
+                    data: '{"username":"MaGrady", "password":"123456", "age":18}', // 发送给服务器的数据
+                    dataType: "json",
+                    type: "post",
+
+                    success:function (data) {
+                        // data是服务器响应的json数据，进行解析
+                        alert(data);
+                        alert(data.password);
+                    }
+                });
+            });
+        });
+    </script>
+```
+使用RequestBody注解把json字符串转换为JavaBean对象    
+使用ResponseBody注解把JavaBean对象转换成json字符串    
+```java
+    @RequestMapping("/json")
+    public @ResponseBody User testJson(@RequestBody User user){
+
+        System.out.println("执行了testJson控制器方法...");
+        // 客户端发送ajax请求，传json字符串，后端导入响应的包会自动封装到User对象
+        System.out.println(user);
+        // 做响应，模拟查询数据库
+        user.setPassword("654321");
+        user.setAge(66);
+
+        return user;
     }
 ```
