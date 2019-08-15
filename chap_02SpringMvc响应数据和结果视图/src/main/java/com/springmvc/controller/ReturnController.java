@@ -4,7 +4,9 @@ import com.springmvc.domain.User;
 import com.sun.deploy.net.HttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,5 +71,30 @@ public class ReturnController {
         // 跳转到哪个页面
         mv.setViewName("success1");
         return mv;
+    }
+
+    @RequestMapping("/forwardOrRedirect")
+    public String testForwardOrRedirect(){
+
+        System.out.println("执行了testForwardOrRedirect控制器方法...");
+
+        // 请求的转发
+        // return "forward:/WEB-INF/pages/success1.jsp";
+
+        // 重定向
+        return "redirect:/index.jsp";
+    }
+
+    @RequestMapping("/json")
+    public @ResponseBody User testJson(@RequestBody User user){
+
+        System.out.println("执行了testJson控制器方法...");
+        // 客户端发送ajax请求，传json字符串，后端导入响应的包会自动封装到User对象
+        System.out.println(user);
+        // 做响应，模拟查询数据库
+        user.setPassword("654321");
+        user.setAge(66);
+
+        return user;
     }
 }

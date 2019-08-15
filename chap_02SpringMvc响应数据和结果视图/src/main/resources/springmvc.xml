@@ -20,6 +20,9 @@
         <property name="suffix" value=".jsp"/>  <!-- 文件后缀 -->
     </bean>
 
+    <!-- 前端控制器，哪些静态资源不拦截 -->
+    <mvc:resources mapping="/js/**" location="/js/"/>
+
     <!-- 开启SpringMvc框架注解的支持 -->
     <mvc:annotation-driven/>
 </beans>
