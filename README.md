@@ -143,7 +143,7 @@ public class HelloController {
     - params: 指定限制请求参数的条件(params = {"username","password=123"})   
     - headers: 发生的请求中必须包含的请求头(headers = {"Cookie"})     
      
-## 请求参数的绑定  
+## 2、请求参数的绑定  
 ### 基本数据类型和字符串类型   
 **提交表单的name值和方法参数的名称是相同的(区分大小写)**        
 ```java
@@ -322,7 +322,7 @@ public class Bank implements Serializable {
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 ```  
-## 常用的注解  
+## 3、常用的注解  
 ### RequestParam注解  
   + 作用: 把请求参数中的指定名称参数传递给控制器中的形参赋值  
   + 属性:  
@@ -489,7 +489,7 @@ public class AnnoController {
     }    
 }
 ```
-## 2、响应数据和结果视图
+## 4、响应数据和结果视图
 ## 返回值分类
 ### 返回值是字符串
 Controller方法返回字符串可以指定逻辑视图的名称，根据视图解析器为物理视图的地址  
@@ -622,3 +622,4 @@ mapping: 表示/js开头的所有请求路径
         return user;
     }
 ```
+
