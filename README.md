@@ -580,6 +580,27 @@ DispatcherServlet会拦截到所有的静态资源，导致一个问题就是静
 location: 表示webapp目录下的包(js)的所有文件   
 mapping: 表示/js开头的所有请求路径  
 ### 发送ajax请求并响应json数据
+**导入相关依赖**
+```xml
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.9.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.9.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.9.2</version>
+    </dependency>
+  </dependencies>
+```
 **发送ajax请求**  
 ```js
     <script src="js/jquery-3.1.1.min.js"></script>
@@ -606,8 +627,8 @@ mapping: 表示/js开头的所有请求路径
         });
     </script>
 ```
-使用RequestBody注解把json字符串转换为JavaBean对象    
-使用ResponseBody注解把JavaBean对象转换成json字符串    
+**使用RequestBody注解把json字符串转换为JavaBean对象**      
+**使用ResponseBody注解把JavaBean对象转换成json字符串**      
 ```java
     @RequestMapping("/json")
     public @ResponseBody User testJson(@RequestBody User user){
@@ -622,4 +643,5 @@ mapping: 表示/js开头的所有请求路径
         return user;
     }
 ```
+
 
