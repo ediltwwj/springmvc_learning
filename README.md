@@ -798,6 +798,68 @@ public String testUpload3(MultipartFile upload) throws Exception{
     return "success";
 }
 ```
+## 6、异常处理
+### 处理思路
+Controller调用Service，service调用dao，异常都是向上抛出的，最终有DispatchServlet
+找异常处理器进行异常处理  
+  + **自定义异常类**  
+  ```java
+public class SysException extends Exception{
+
+    // 存储错误提示信息
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public SysException(String message) {
+
+        this.message = message;
+    }
+}
+```
+  + **自定义异常处理器**    
+  ```java
+public class SysExceptionResolver implements HandlerExceptionResolver {
+
+    /**
+     * 处理异常的业务逻辑
+     * @param request
+     * @param response
+     * @param handler
+     * @param ex
+     * @return
+     */
+    @Override
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+
+        // 获取异常对象
+        SysException e = null;
+        if(ex instanceof SysException){
+            e = (SysException)ex;
+        }else{
+            e = new SysException("系统正在维护....");
+        }
+
+        // 创建ModelView对象
+        ModelAndView mv = new ModelAndView();
+        mv.addObject("errorMsg", e.getMessage());
+        mv.setViewName("error");
+
+        return mv;
+    }
+}
+```
+  + **配置异常处理器**   
+  ```xml
+    <!-- 配置异常处理器 -->
+    <bean id="sysExceptionResolver" class="com.springmvc.exception.SysExceptionResolver"/>
+```
 
 
 
