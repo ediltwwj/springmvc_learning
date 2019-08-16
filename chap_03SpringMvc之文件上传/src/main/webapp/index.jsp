@@ -11,10 +11,19 @@
     <title>Title</title>
 </head>
 <body>
-    <h2>文件上传</h2>
+    <h2>传统方式上传文件</h2>
 
     <form action="/file/upload1" method="post" enctype="multipart/form-data">
-        选择文件: <input type="file" name="upload"/><br/>
+        选择文件: <input type="file" name="upload1"/><br/>
+        <input type="submit" value="上传"/>
+    </form>
+
+    <hr/>
+
+    <h2>springmvc方式上传文件</h2>
+
+    <form action="/file/upload2" method="post" enctype="multipart/form-data">
+        选择文件: <input type="file" name="upload2"/><br/>
         <input type="submit" value="上传"/>
     </form>
 </body>
