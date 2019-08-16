@@ -661,10 +661,10 @@ mapping: 表示/js开头的所有请求路径
 ```
 **编写文件上传的JSP页面**  
 ```html
-    <h2>文件上传</h2>
+    <h2>传统方式上传文件</h2>
 
     <form action="/file/upload1" method="post" enctype="multipart/form-data">
-        选择文件: <input type="file" name="upload"/><br/>
+        选择文件: <input type="file" name="upload1"/><br/>
         <input type="submit" value="上传"/>
     </form>
 ```
@@ -713,6 +713,92 @@ mapping: 表示/js开头的所有请求路径
         return "success";
     }
 ```
+### SpringMvc传统方式上传文件
+**SpringMVC框架提供了MultipartFile对象，该对象表示上传的文件，要求变量名称必须和表单ﬁle标签的name属性名称相同**  
+**配置文件解析器对象**      
+```xml
+    <!-- 配置文件解析器对象,id必须命名为multipartResolver -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10485760"/>
+    </bean>
+```
+**编写文件上传的Controller控制器(fileUpload2)**    
+不需要自己再去解析request对象  
+```java
+    @RequestMapping("/upload2")
+    public String testUpload2(HttpServletRequest request, MultipartFile upload2) throws IOException {
+
+        System.out.println("执行fileUpload2控制器方法...");
+
+        // 使用fileupload组件完成文件上传
+        // 上传的位置
+        String path = request.getSession().getServletContext().getRealPath("/uploads/");
+        // 本机在Tomcat目录下
+        System.out.println("PATH:" + path);
+        // 判断该路径是否存在
+        File file = new File(path);
+        if(!file.exists()){
+            // 创建文件夹
+            file.mkdirs();
+        }
+
+        // 获取文件上传的名称
+        String filename = upload2.getOriginalFilename();
+        // 把文件名称设置为唯一值,uuid
+        String uuid = UUID.randomUUID().toString().replace("-","");
+        filename = uuid + "_" + filename;
+        // 完成文件上传
+        upload2.transferTo(new File(path, filename));
+
+        return "success";
+    }
+}
+```
+### 跨服务器上传文件  
+**导入开发需要的jar包**  
+```xml
+<dependency>
+    <groupId>com.sun.jersey</groupId>
+    <artifactId>jersey-core</artifactId>
+    <version>1.81.1</version>
+</dependency>
+
+<dependency>
+    <groupId>com.sun.jersey</groupId>
+    <artifactId>jersey-client</artifactId>
+    <version>1.81.1</version>
+</dependency>
+```
+**编写文件上传的Controller控制器(fileUpload3)**    
+```java
+@RequestMapping("/upload3")
+public String testUpload3(MultipartFile upload) throws Exception{
+    
+    System.out.println("执行fileUpload3控制器方法...");
+    
+    // 记得判断文件夹是否存在
+    // 定义图片服务器的请求路径
+    String path = "http://localhost:9090/day02_springmvc5_02image/uploads/";
+    
+    // 获取文件上传的名称
+    String filename = upload2.getOriginalFilename();
+    // 把文件名称设置为唯一值,uuid
+    String uuid = UUID.randomUUID().toString().replace("-","");
+    filename = uuid + "_" + filename;
+    
+    // 创建客户端对象
+    Client client = Client.create(); 
+    
+    // 连接图片服务器
+    WebResource webResource = client.resource(path+filename); 
+    
+    // 上传文件
+    webResource.put(upload.getBytes());
+    
+    return "success";
+}
+```
+
 
 
 
