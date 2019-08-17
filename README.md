@@ -861,6 +861,69 @@ public class SysExceptionResolver implements HandlerExceptionResolver {
     <bean id="sysExceptionResolver" class="com.springmvc.exception.SysExceptionResolver"/>
 ```
 
+## 7、拦截器
+### 拦截器的概述
+1、过滤器配置了/*，可以拦截任何资源，而拦截器只会对控制器中的方法进行拦截  
+2、想要自定义拦截器，需要实现HandlerInterceptor接口，其中三个方法默认实现  
+### HandlerInterceptor接口中的方法  
+  + preHandle方法是controller方法执行前拦截的方法  
+    - 可以使用request或者response跳转到指定的页面  
+    - return true，放行，执行下一个拦截，直到没有，执行controller中的方法  
+    - return false，不放行，不会执行controller中的方法  
+  + postHandle方法是controller方法执行后的方法，在Jsp视图执行前  
+    - 可以使用request或者response跳转到指定页面  
+    - 如果指定了跳转的页面，那么controller方法跳转的页面将不会显示  
+  + afterCompletion方法是在Jsp执行后执行  
+    - request或者response不能再跳转页面了  
+    - 通常用于释放资源  
+### 自定义拦截器
+  + **创建类，实现HandlerInterceptor接口，重写需要的方法**  
+  ```java
+public class MyInterceptor2 implements HandlerInterceptor {
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        System.out.println("MyInterceptor2执行了预处理...控制器前");
+        return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+        System.out.println("MyInterceptor2执行了后处理...控制器后");
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+        System.out.println("MyInterceptor2执行了最后处理...跳转页面之后");
+    }
+}
+```
+  + **在springmvc.xml中配置拦截器类**  
+  ```xml
+    <!-- 配置拦截器-->
+    <mvc:interceptors>
+        <!-- 配置第一个拦截器 -->
+        <mvc:interceptor>
+            <!-- 要拦截的具体方法 -->
+            <mvc:mapping path="/interceptor/*"/>
+            <!-- 不要拦截的具体方法
+            <mvc:exclude-mapping path=""/>
+            -->
+            
+            <!-- 配置拦截器对象 -->
+            <bean class="com.springmvc.interceptor.MyInterceptor1"/>
+        </mvc:interceptor>
+
+        <!-- 配置第二个拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.springmvc.interceptor.MyInterceptor2"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+```
 
 
 
